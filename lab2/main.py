@@ -1,12 +1,17 @@
 import database
+import time
+from CUI.cui import CUI
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-database.test()
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    def connectToDB():
+        print("Connection to db...")
+        time.sleep(2)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    instance = {
+        'first': "sfc",
+        '2': "skdc"
+    }
+    test = CUI("Books")
+    test.addField("connect to db", lambda: connectToDB())
+    test.run()
+

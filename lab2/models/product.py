@@ -1,55 +1,115 @@
 import sys
+import math
+import datetime
 sys.path.append('../')
 import models.database as database
 import CUI.cui as console
 
-class Product:
-    def __init__(self):
-        self.name = None
-        self.cost = None
-        self.brand = None
-        self.manufacture_date = None
-        self.manufacturer = None
-        self.category = None
+class dbModel:
 
-    def __varSetUp(self, key: str, value: str):
-        exec("self.%s = \"%s\"" % (key, value))
+    #private:
+    def __varSetUpDate(self, key: str, value: str):
+        datetime.datetime.strptime(value, "%Y-%m-%d")
+        exec("self.%s = \"\'%s\'\"" % (key, value))
 
-    def __fillSetUp(self, key: str):
-        value = input(f"Enter {key}: ")
-        self.__varSetUp(key, value)
+    def __varSetUpNumber(self, key: str, value: str):
+        if not isinstance(int(value), int): raise Exception("Invalid input")
+        exec("self.%s = %i" % (key, int(value)))
 
-    def getSqlString(self):
-        if self.name == None:  raise Exception('The entry must have a name')
-        if self.cost == None:  raise Exception('The entry must have a cost')
-        if self.manufacture_date == None:  raise Exception('The entry must have a manufacture_date')
-        if self.manufacturer == None:  raise Exception('The entry must have a manufacturer')
-        if self.category == None:  raise Exception('The entry must have a category_id')
-        if self.brand == None: self.brand = 'null'
+    def __varSetUpMoney(self, key: str, value: str):
+        if not isinstance(int(value), int): raise Exception("Invalid input")
+        exec("self.%s = %i" % (key, math.fabs(int(value))))
 
-        firstStr = ''
-        secondStr = ''
+    def __varSetUpString(self, key: str, value: str):
+        exec("self.%s = \"\'%s\'\"" % (key, value))
+
+    def __fillValue(self, key: str, type: str):
+        value: str = input(f"Enter {key}: ")
+        self.__fillMenu.setError('')
+        try:
+            if (type == 'string'):
+                self.__varSetUpString(key, value)
+
+            if (type == 'number'):
+                self.__varSetUpNumber(key, value)
+
+            if (type == 'money'):
+                self.__varSetUpMoney(key, value)
+
+            if (type == 'date'):
+                self.__varSetUpDate(key, value)
+
+            self.__fillMenu.renameField(key, key + f'    ({value})')
+        except Exception:
+            self.__fillMenu.setError(f"ERROR! Incorrect {key} input")
+
+    #public:
+    def getKeys(self):
+        outputStr = ''
         for key in self.__dict__.keys():
-            firstStr += key + ','
-        for value in self.__dict__.values():
-            secondStr += f"\'{str(value)}\' ,"
-        return f"INSERT INTO \"Product\" ({firstStr[:-1]}) VALUES ({secondStr[:-1]})"
+            outputStr += key + ','
+        return  outputStr[:-1]
+
+    def getValues(self):
+        outputStr = ''
+        for item in self.__dict__.values():
+            if isinstance(item, dict): outputStr += str(item['value']) + ','
+        return outputStr[:-1]
 
     def fill(self):
-        for key in self.__dict__.keys():
-            self.__fillSetUp(key)
+        self.__fillMenu = console.CUI('fill')
+        iters = dict((x, y) for x, y in self.__dict__.items() if x[:2] != '__')
+        iters.update(self.__dict__)
+        for key, value in iters.items():
+            if (key != '_dbModel__fillMenu'):
+                self.__fillMenu.addField(key, lambda key = key, value = value: self.__fillValue(key, value['type']))
+        self.__fillMenu.run("finish")
 
-        for value in self.__dict__.values():
-            print(value)
+
+
+
+class Product(dbModel):
+    def __init__(self):
+        self.name = {
+            'type': 'string',
+            'value': None
+        }
+
+        self.cost = {
+            'type': 'money',
+            'value': None
+        }
+
+        self.brand = {
+            'type': 'string',
+            'value': None
+        }
+
+        self.manufacture_date = {
+            'type': 'date',
+            'value': None
+        }
+
+        self.manufacturer = {
+            'type': 'string',
+            'value': None
+        }
+
+        self.category = {
+            'type': 'number',
+            'value': None
+        }
+
+test = Product()
+test.fill()
+print(test.getValues())
 
 
 class ProductModel:
     def __init__(self):
         self.db = database.getCursor()
 
-    def add(self):
-        newP = Product()
-        newP.fill()
-        self.db.execute(newP.getSqlString())
+    def add(self, *args):
+        print()
 
-ProductModel().add()
+

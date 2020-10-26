@@ -101,6 +101,7 @@ class CUI(object):
     def deleteField(self, title: str):
         try:
             if len(title) > 0:
+
                 for i in range(len(self.__currentNode.childs)):
                     if self.__currentNode.childs[i].title == title:
                         del self.__currentNode.childs[i]
@@ -110,6 +111,10 @@ class CUI(object):
 
     def setError(self, err: str):
         self.__error = err
+
+    def stop(self):
+        self.__setBreakStatus(False)
+
 
 #test = CUI()
 #import time

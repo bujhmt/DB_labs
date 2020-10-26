@@ -1,9 +1,11 @@
 import sys
+
 sys.path.append('../')
 import models.product
 import database as db
 
 Product = models.product.Product
+
 
 class ProductController(object):
 
@@ -19,7 +21,8 @@ class ProductController(object):
         items = []
         try:
             page -= 1
-            self.cursor.execute(f'SELECT {Product().getKeys()} FROM "Product" LIMIT {per_page} OFFSET {page * per_page}')
+            self.cursor.execute(
+                f'SELECT {Product().getKeys()} FROM "Product" ORDER BY id LIMIT {per_page} OFFSET {page * per_page}')
             records = self.cursor.fetchall()
             for record in records:
                 tmpItem = Product()
@@ -34,7 +37,8 @@ class ProductController(object):
             newEntity: Product = Product()
             if len(args) > 0 and isinstance(args[0], Product):
                 newEntity = args[0]
-            else: newEntity.fill()
+            else:
+                newEntity.fill()
 
             if newEntity.isFull():
                 print(f'INSERT INTO "Product" ({newEntity.getKeys()}) VALUES ({newEntity.getValues()}) RETURNING id')
@@ -53,8 +57,10 @@ class ProductController(object):
             if not isinstance(productId, str): raise Exception('Incorrect arguments')
             self.cursor.execute(f'SELECT {product.getKeys()} from "Product" WHERE id = {productId}')
             record = self.cursor.fetchone()
-            if record is not None: product.parse(record)
-            else: raise Exception(f'No entry with ID {productId} found')
+            if record is not None:
+                product.parse(record)
+            else:
+                raise Exception(f'No entry with ID {productId} found')
         except Exception as err:
             print("Get by id error! ", err)
         return product
@@ -71,8 +77,26 @@ class ProductController(object):
             print("Delete error! ", err)
             return False
 
-    def update(self, product: Product):
+    def update(self, *args):
         try:
+            product: Product = Product()
+            if len(args) is 0: raise Exception('Invalid arguments')
+            if isinstance(args[0], int) or isinstance(int(args[0]), int):
+                product.fill()
+                product.id = args[0]
+                values = product.getValues().split(',')
+                old_values = self.getById(args[0]).getValues().split(',')
+                keys = product.getKeys().split(',')
+                for i in range(len(keys)):
+                    if values[i] == 'null':
+                        product.__setattr__(keys[i], old_values[i])
+
+            if isinstance(args[0], Product):
+                product = args[0]
+
+            if not product.isFull():
+                raise Exception('Invalid input')
+
             queryStr = ''
             keys = product.getKeys().split(',')
             values = product.getValues().split(',')

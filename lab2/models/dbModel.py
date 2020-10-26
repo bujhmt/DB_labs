@@ -31,7 +31,8 @@ class DbModel:
         if len(args) > 0 and isinstance(args[0], str):
             value = args[0]
         else:
-            value = input(f"Enter {key}: ")
+            if len(args) is 0:
+                value = input(f"Enter {key}: ")
         if len(args) == 0: self.__fillMenu.setError('')
         try:
             if '"' in value: raise Exception

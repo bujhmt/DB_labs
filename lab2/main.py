@@ -14,6 +14,7 @@ if __name__ == '__main__':
     cui.addMenu("Oskar")
     cui.addField("Oskar 1")
     cui.addField("delete Oskar")
+    cui.deleteField('Oskar')
     cui.run()
 
 

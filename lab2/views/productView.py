@@ -1,5 +1,6 @@
 import sys
 sys.path.append('../')
+import math
 from controllers.productController import ProductController
 from models.product import Product
 from CUI.cui import CUI
@@ -28,14 +29,17 @@ class ProductView:
         self.page = page
         self.per_page = per_page
         self.currentMenu.stop()
+        del self.currentMenu
         self.__getProducts()
 
     def __getProducts(self):
         productsMenu = CUI('Products')
         self.currentMenu = productsMenu
         try:
-            productsMenu.addField('NEXT', lambda: self.__changePageParams(self.page + 1, self.per_page))
-            productsMenu.addField('PREV', lambda: self.__changePageParams(self.page - 1, self.per_page))
+            if self.page < math.ceil(self.productController.getCount() / self.per_page):
+                productsMenu.addField('NEXT', lambda: self.__changePageParams(self.page + 1, self.per_page))
+            if self.page > 1:
+                productsMenu.addField('PREV', lambda: self.__changePageParams(self.page - 1, self.per_page))
             products = self.productController.getAll(self.page, self.per_page)
             for product in products:
                 productsMenu.addField(f"<{product.id}> {product.name}", lambda id=product.id: self.__getProduct(id))
@@ -43,7 +47,6 @@ class ProductView:
         except Exception as err:
             productsMenu.setError(str(err))
         productsMenu.run('Return to main menu')
-
 
     def __updateProduct(self, id: int):
         self.productController.update(id)

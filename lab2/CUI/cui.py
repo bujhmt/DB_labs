@@ -116,13 +116,3 @@ class CUI(object):
         self.__setBreakStatus(False)
 
 
-#test = CUI()
-#import time
-
-#def printI(*args):
-    #print(str(args[0]))
-    #time.sleep(1)
-
-#for i in range(10):
-    #test.addField(str(i), lambda i=i: printI(i))
-

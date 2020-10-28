@@ -108,3 +108,12 @@ class ProductController(object):
         except Exception as err:
             print("Update error! ", err)
             return False
+
+    def getCount(self):
+        try:
+            self.cursor.execute(f'SELECT count(*)  from "Product"')
+            return int(self.cursor.fetchone()[0])
+        except Exception as err:
+            print("Get count error! ", err)
+            return 0
+

@@ -18,6 +18,10 @@ class DbModel:
         if not isinstance(int(value), int): raise Exception("Invalid input")
         exec("self.%s = %i" % (key, int(value)))
 
+    def __varSetUpFloat(self, key: str, value: str):
+        if not isinstance(float(value), float): raise Exception("Invalid input")
+        exec("self.%s = %f" % (key, float(value)))
+
     def __varSetUpMoney(self, key: str, value: str):
         if not isinstance(int(value), int): raise Exception("Invalid input")
         exec("self.%s = %i" % (key, math.fabs(int(value))))
@@ -44,6 +48,9 @@ class DbModel:
             if type == 'number':
                 self.__varSetUpNumber(key, value)
 
+            if type == 'float':
+                self.__varSetUpFloat(key, value)
+
             if type == 'money':
                 self.__varSetUpMoney(key, value)
 
@@ -67,7 +74,7 @@ class DbModel:
             if isinstance(item, dict):
                 if item['value'] is None: item['value'] = 'null'
                 outputStr += str(item['value']) + ','
-            if isinstance(item, str) or isinstance(item, int): outputStr += str(item) + ','
+            if isinstance(item, str) or isinstance(item, int) or isinstance(item, float): outputStr += str(item) + ','
         return outputStr[:-1]
 
     def fill(self):

@@ -61,7 +61,8 @@ class CUI(object):
         self.__currentNode = self.root
         exit_str = "EXIT"
         if len(args) > 0 and isinstance(args[0], str): exit_str = args[0]
-        self.__currentNode.append(exit_str, lambda: self.__setBreakStatus(False))
+        if not (len(args) > 0 and isinstance(args[0], bool) and args[0] is False):
+            self.__currentNode.append(exit_str, lambda: self.__setBreakStatus(False))
 
 
         while (self.__isBreakON):

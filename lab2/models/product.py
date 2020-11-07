@@ -33,7 +33,12 @@ class Product(DbModel):
             'value': None
         }
 
-        self.category = {
+        self.category_id = {
+            'type': 'number',
+            'value': None
+        }
+
+        self.order_id = {
             'type': 'number',
             'value': None
         }

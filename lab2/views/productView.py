@@ -7,8 +7,9 @@ from CUI.cui import CUI
 
 class ProductView:
     def __init__(self):
+        self.currentMenu = [None, None]
         self.page = 1
-        self.per_page = 7
+        self.per_page = 10
 
         self.CUI = CUI("Product model menu")
         self.productController = ProductController()
@@ -20,7 +21,7 @@ class ProductView:
     def __addProduct(self):
         try:
             result = self.productController.add()
-            if not isinstance(result, int): raise Exception('Inccorect values')
+            if isinstance(result, bool) and not result: raise Exception('Inccorect values')
             else: self.CUI.setError('New Product id: ' + str(result))
         except Exception as err:
             self.CUI.setError(str(err))
@@ -28,13 +29,12 @@ class ProductView:
     def __changePageParams(self, page: int, per_page: int):
         self.page = page
         self.per_page = per_page
-        self.currentMenu.stop()
-        del self.currentMenu
+        self.currentMenu[0].stop()
         self.__getProducts()
 
     def __getProducts(self):
         productsMenu = CUI('Products')
-        self.currentMenu = productsMenu
+        self.currentMenu[0] = productsMenu
         try:
             if self.page < math.ceil(self.productController.getCount() / self.per_page):
                 productsMenu.addField('NEXT', lambda: self.__changePageParams(self.page + 1, self.per_page))
@@ -49,17 +49,24 @@ class ProductView:
         productsMenu.run('Return to main menu')
 
     def __updateProduct(self, id: int):
-        self.productController.update(id)
-        self.currentMenu.stop()
-        self.__getProduct(id)
+        if self.productController.update(id):
+            self.currentMenu[1].stop()
+            self.__getProduct(id)
+        else:
+            self.currentMenu[1].setError('Incorrect update values')
 
     def __deleteProduct(self, id: int):
         self.productController.delete(id)
-        self.currentMenu.stop()
+        self.currentMenu[1].stop()
+        self.__supportCUIFunc()
+
+    def __supportCUIFunc(self):
+        self.currentMenu[1].stop()
+        self.__changePageParams(self.page, self.per_page)
 
     def __getProduct(self, id: int):
         productMenu = CUI('Product menu')
-        self.currentMenu = productMenu
+        self.currentMenu[1] = productMenu
         try:
             product: Product = self.productController.getById(id)
             values = product.getValues().split(',')
@@ -69,8 +76,8 @@ class ProductView:
 
             productMenu.addField('DELETE', lambda: self.__deleteProduct(product.id))
             productMenu.addField('UPDATE', lambda: self.__updateProduct(product.id))
+            productMenu.addField('Return to prev menu', lambda: self.__supportCUIFunc())
         except Exception as err:
             productMenu.setError(str(err))
-        productMenu.run('Return to Products menu')
+        productMenu.run(False)
 
-test = ProductView()

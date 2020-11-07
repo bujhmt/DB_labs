@@ -15,8 +15,9 @@ class CategoryView:
         self.categoryController = CategoryController()
         self.CUI.addField('Add Category', lambda: self.__addCategory())
         self.CUI.addField('Categorys', lambda: self.__getCategorys())
-        self.CUI.run()
 
+    def run(self):
+        self.CUI.run()
 
     def __addCategory(self):
         try:

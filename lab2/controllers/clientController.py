@@ -10,10 +10,11 @@ class ClientController(object):
         try:
             self.db = db()
 
-            if self.db.cursor is None: raise Exception('No connection. Please, check your config.json or Postgre server')
+            if db is None: raise Exception('No connection. Please, check your config.json or Postgre server')
 
         except Exception as err:
             print("Connection error! ", err)
+            exit(1)
 
     def getAll(self, page: int, per_page: int):
         items = []

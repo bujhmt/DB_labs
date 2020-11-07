@@ -1,20 +1,15 @@
-import time
+from views.clientView import ClientView
+from views.orderView import OrderView
+from views.categoryView import CategoryView
+from views.productView import ProductView
 from CUI.cui import CUI
 
 if __name__ == '__main__':
-
-    def connectToDB():
-        print("Connection to db...")
-        time.sleep(2)
-
-
-    cui = CUI("HUi Iluxi")
-    cui.addField("add film", lambda: connectToDB())
-    cui.addField("Avatar")
-    cui.addMenu("Oskar")
-    cui.addField("Oskar 1")
-    cui.addField("delete Oskar")
-    cui.deleteField('Oskar')
-    cui.run()
+    main = CUI()
+    main.addField('Products', lambda: ProductView().run())
+    main.addField('Categories', lambda: CategoryView().run())
+    main.addField('Orders', lambda: OrderView().run())
+    main.addField('Clients', lambda: ClientView().run())
+    main.run()
 
 

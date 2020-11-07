@@ -15,8 +15,9 @@ class ClientView:
         self.clientController = ClientController()
         self.CUI.addField('Add Client', lambda: self.__addClient())
         self.CUI.addField('Clients', lambda: self.__getClients())
-        self.CUI.run()
 
+    def run(self):
+        self.CUI.run()
 
     def __addClient(self):
         try:
@@ -81,4 +82,3 @@ class ClientView:
             clientMenu.setError(str(err))
         clientMenu.run(False)
 
-test = ClientView()

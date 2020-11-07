@@ -15,6 +15,8 @@ class ProductView:
         self.productController = ProductController()
         self.CUI.addField('Add Product', lambda: self.__addProduct())
         self.CUI.addField('Products', lambda: self.__getProducts())
+
+    def run(self):
         self.CUI.run()
 
 

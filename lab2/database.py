@@ -2,13 +2,13 @@ import psycopg2
 import os
 import sys
 sys.path.append('../')
-import utils.jsonReader
+from utils.jsonReader import JsonReader
 
 
 
 class db:
     def __init__(self):
-        config = utils.jsonReader.JsonReader(os.getcwd()).getJsonObject('./../config.json')
+        config = JsonReader(os.getcwd()).getJsonObject('./config.json')
         self.connect = psycopg2.connect(dbname=config['dbname'], user=config['user'],
                             password=config['password'], host=config['host'])
         self.cursor = self.connect.cursor()

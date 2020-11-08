@@ -116,16 +116,19 @@ class OrderController(object):
         except Exception as err:
             print("Get count error! ", err)
 
-    def generateRows(self, entitiesNum: int, client_id: int):
+    def generateRows(self, entitiesNum: int):
         startTime = time.time()
         try:
-            self.db.cursor.execute(f'INSERT  INTO "Order" (client_id,transaction_date,taxes_sum)'
-                                   f' SELECT {client_id},'
-                                   f'generatedate()::date,'
-                                   f'generateint(100)::money '
-                                   f'FROM generate_series(1, {entitiesNum})')
+            self.db.cursor.execute(f"INSERT  INTO \"Order\" (client_id,transaction_date,taxes_sum)"
+                                   f"SELECT getrandomrow('Client')::int,"
+                                   f"generatedate()::date,"
+                                   f"generateint(100)::money "
+                                   f"FROM generate_series(1, {entitiesNum})")
             self.db.connect.commit()
         except Exception as err:
             print("Generate Rows error! ", err)
         endTime = time.time()
         return str(endTime - startTime)[:9] + 'ms'
+
+test = OrderController()
+print(test.generateRows(3))

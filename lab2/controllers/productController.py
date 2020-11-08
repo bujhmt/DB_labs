@@ -1,10 +1,8 @@
 import sys
 import time
-import models.product
+sys.path.append('../')
+from models.product import Product
 from database import db
-
-Product = models.product.Product
-
 
 class ProductController(object):
 
@@ -116,17 +114,18 @@ class ProductController(object):
         except Exception as err:
             print("Get count error! ", err)
 
-    def generateRows(self, entitiesNum: int, category_id: int):
+    def generateRows(self, entitiesNum: int):
         startTime = time.time()
         try:
-            self.db.cursor.execute(f'INSERT  INTO "Product" (name,cost,brand,manufacture_date,manufacturer,category)'
-                                   f' SELECT generatestring(15),'
-                                   f'generateint(2000)::money,'
-                                   f'generatestring(15),'
-                                   f'generatedate()::date,'
-                                   f'generatestring(15),'
-                                   f'{category_id}'
-                                   f'FROM generate_series(1, {entitiesNum})')
+            self.db.cursor.execute(f"INSERT  INTO \"Product\" (name,cost,brand,manufacture_date,manufacturer,category_id, order_id)"
+                                   f"SELECT generatestring(15),"
+                                   f"generateint(2000)::money,"
+                                   f"generatestring(15),"
+                                   f"generatedate()::date,"
+                                   f"generatestring(15),"
+                                   f"getrandomrow('Category')::int,"
+                                   f"getrandomrow('Order')::int "
+                                   f"FROM generate_series(1, {entitiesNum})")
             self.db.connect.commit()
         except Exception as err:
             print("Generate Rows error! ", err)

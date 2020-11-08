@@ -14,10 +14,22 @@ class ClientView:
         self.CUI = CUI("Client model menu")
         self.clientController = ClientController()
         self.CUI.addField('Add Client', lambda: self.__addClient())
+        self.CUI.addField('Generate rows', lambda: self.__generateRows())
         self.CUI.addField('Clients', lambda: self.__getClients())
 
     def run(self):
         self.CUI.run()
+
+    def __generateRows(self):
+        try:
+            rowsNum = int(input('Enter rows num: '))
+            if not (isinstance(rowsNum, int) and rowsNum > 0):
+                raise Exception('Invalid input')
+            self.CUI.setError('   Please wait! Rows are generating...   ')
+            time = self.clientController.generateRows(rowsNum)
+            self.CUI.setError('   Rows generated! Elapsed time: ' + time)
+        except Exception as error:
+            self.CUI.setError(str(error))
 
     def __addClient(self):
         try:

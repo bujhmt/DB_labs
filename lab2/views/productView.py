@@ -14,11 +14,22 @@ class ProductView:
         self.CUI = CUI("Product model menu")
         self.productController = ProductController()
         self.CUI.addField('Add Product', lambda: self.__addProduct())
+        self.CUI.addField('Generate rows', lambda: self.__generateRows())
         self.CUI.addField('Products', lambda: self.__getProducts())
 
     def run(self):
         self.CUI.run()
 
+    def __generateRows(self):
+        try:
+            rowsNum = int(input('Enter rows num: '))
+            if not (isinstance(rowsNum, int) and rowsNum > 0):
+                raise Exception('Invalid input')
+            self.CUI.setError('   Please wait! Rows are generating...   ')
+            time = self.productController.generateRows(rowsNum)
+            self.CUI.setError('   Rows generated! Elapsed time: ' + time)
+        except Exception as error:
+            self.CUI.setError(str(error))
 
     def __addProduct(self):
         try:

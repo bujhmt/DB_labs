@@ -42,3 +42,13 @@ class SearchController(object):
             return self.db.cursor.fetchall()
         except Exception as err:
             raise str(err)
+
+    def getAllCategoryProducts(self, category_id: int):
+        try:
+            self.db.cursor.execute(
+                f'SELECT P.id as ProductId, P.name, P.cost, P.manufacturer from "Product" as P '
+                f'INNER JOIN "Category" C on C.id = P.category_id '
+                f'WHERE category_id = {category_id}')
+            return self.db.cursor.fetchall()
+        except Exception as err:
+            raise str(err)

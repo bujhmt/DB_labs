@@ -18,6 +18,7 @@ class SearchView:
         self.searchController = SearchController()
         self.CUI.addField('Search products cost by cost range', lambda: self.__getProductsByCostRange())
         self.CUI.addField('Search all client orders', lambda: self.__getClientOrders())
+        self.CUI.addField('Search all category products', lambda: self.__getCategoryProducts())
 
     def run(self):
         self.CUI.run()
@@ -59,7 +60,7 @@ class SearchView:
             if self.page > 1:
                 searchMenu.addField('PREV', lambda: self.__changePageParams(self.page - 1, self.per_page))
 
-            searchMenu.addField('<ID>  Product name  Product cost  Category name')
+            searchMenu.addField('<ID> | Product name | Product cost | Category name')
             for record in self.searchController.getProductsByCostRange(self.min, self.max, self.page, self.per_page):
                 searchMenu.addField(f"<{record[0]}> {record[1]} {record[2]} {record[3]}")
 
@@ -70,7 +71,7 @@ class SearchView:
         searchMenu.run(False)
 
     def __getClientOrders(self):
-        searchMenu = CUI('Products')
+        searchMenu = CUI('Client Orders')
         self.currentMenu = searchMenu
         try:
             client_id = int(input('Enter client_id: '))
@@ -85,9 +86,34 @@ class SearchView:
             searchMenu.setError('\nElapsed time: ' + str(endTime - startTime)[:9] + 's'
                                 '\nRows num: ' + str(len(allRecords)))
 
-            searchMenu.addField('<Order id>  transaction date  taxes_sum')
+            searchMenu.addField('<Order id> | transaction date | taxes_sum')
             for record in allRecords:
                 searchMenu.addField(f"<{record[0]}> {record[1]} {record[2]}")
+
+        except Exception as err:
+            searchMenu.setError(str(err))
+
+        searchMenu.run('Return to prev menu')
+
+    def __getCategoryProducts(self):
+        searchMenu = CUI('Cayegory Products')
+        self.currentMenu = searchMenu
+        try:
+            category_id = int(input('Enter category_id: '))
+
+            if not (isinstance(category_id, int) and category_id > 0):
+                raise Exception('Invalid input')
+
+            startTime = time.time()
+            allRecords = self.searchController.getAllCategoryProducts(category_id)
+            endTime = time.time()
+
+            searchMenu.setError('\nElapsed time: ' + str(endTime - startTime)[:9] + 's'
+                                '\nRows num: ' + str(len(allRecords)))
+
+            searchMenu.addField('<Product id> | Product name | Product cost | Manufacturer')
+            for record in allRecords:
+                searchMenu.addField(f"<{record[0]}> {record[1]} {record[2]} {record[3]}")
 
         except Exception as err:
             searchMenu.setError(str(err))

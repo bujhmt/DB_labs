@@ -117,7 +117,8 @@ class ProductController(object):
     def generateRows(self, entitiesNum: int):
         startTime = time.time()
         try:
-            self.db.cursor.execute(f"INSERT  INTO \"Product\" (name,cost,brand,manufacture_date,manufacturer,category_id, order_id)"
+            self.db.cursor.execute(f"INSERT  INTO \"Product\" (name,cost,brand,manufacture_date,"
+                                   f"manufacturer,category_id, order_id) "
                                    f"SELECT generatestring(15),"
                                    f"generateint(2000)::money,"
                                    f"generatestring(15),"

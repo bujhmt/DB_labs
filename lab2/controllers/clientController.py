@@ -127,5 +127,5 @@ class ClientController(object):
         except Exception as err:
             print("Generate Rows error! ", err)
         endTime = time.time()
-        return str(endTime - startTime)[:9] + 'ms'
+        return str(endTime - startTime)[:9] + 's'
 

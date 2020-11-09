@@ -42,7 +42,7 @@ class db:
                             'begin '
                             'select concat((1990 + trunc(random() * 30 + 1)::int)::text, '
                             '"-0", trunc(random() * 9 + 1)::text, "-", '
-                            '(9 + trunc(random() * 20 + 1)::int)::text) '
+                            '(8 + trunc(random() * 20 + 1)::int)::text) '
                             'into outputDate; '
                             'return outputDate; '
                             'end; '

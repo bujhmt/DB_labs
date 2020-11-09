@@ -128,7 +128,4 @@ class OrderController(object):
         except Exception as err:
             print("Generate Rows error! ", err)
         endTime = time.time()
-        return str(endTime - startTime)[:9] + 'ms'
-
-test = OrderController()
-print(test.generateRows(3))
+        return str(endTime - startTime)[:9] + 's'

@@ -129,5 +129,6 @@ class ProductController(object):
             self.db.connect.commit()
         except Exception as err:
             print("Generate Rows error! ", err)
+            exit(1)
         endTime = time.time()
-        return str(endTime - startTime)[:9] + 'ms'
+        return str(endTime - startTime)[:9] + 's'

@@ -22,7 +22,7 @@
 ## Order
 |name|data type|not null|PK|FK|
 |--|--|--|--|--|
-|id|integer||yes|yes
+|id|integer|yes|yes
 |transaction_date|date|yes|no
 |taxes_sum|money|yes|no
 |client_id|integer|yes|no|Client.id

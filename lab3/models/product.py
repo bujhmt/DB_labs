@@ -7,7 +7,7 @@ class Product(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    brand = Column(String, nullable=False)
+    brand = Column(String)
     manufacturer = Column(String)
     manufacture_date = Column(Date, default=func.now())
     category_id = Column(Integer, ForeignKey('Category.id'))
@@ -42,5 +42,3 @@ class Product(Base):
         self.manufacture_date = manufacture_date
         self.category_id = category_id
         self.order_id = order_id
-
-

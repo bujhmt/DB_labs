@@ -1,20 +1,19 @@
-from models.dbModel import DbModel
+from sqlalchemy import Column, Integer, String
+from db import Base
 
-class Category(DbModel):
-    def __init__(self):
-        self.id = {
-            'type': 'number',
-            'value': "DEFAULT",
-            'not null': False
-        }
+class Category(Base):
+    __tablename__ = 'Category'
 
-        self.name = {
-            'type': 'string',
-            'value': None
-        }
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    type = Column(String)
 
-        self.type = {
-            'type': 'string',
-            'value': None,
-        }
+    def __repr__(self):
+      return "<Category(name='%s', type='%s')>" % \
+             (self.name, self.type)
+
+    def __init__(self, name: str, type: str):
+        self.name = name
+        self.type = type
+
 

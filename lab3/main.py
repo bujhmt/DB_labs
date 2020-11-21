@@ -1,21 +1,26 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from db import Base, session, engine
 
 from models.client import Client
 from models.order import Order
+from models.category import Category
+from models.product import Product
 
-engine = create_engine('postgresql://postgres:bujhm9@localhost:5432/db_labs')
-Session = sessionmaker(bind=engine)
-
-session = Session()
+def recreate_database():
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
 
 if __name__ == '__main__':
-    client = Client('Sqlalchemy_test', '2002-04-02', 'wduc@mail.ru')
-    #session.add(client)
 
-    order = Order('', 100, 135)
-    session.add(order)
+    product = Product('test',
+                      'some',
+                      'Windows',
+                      '2002-04-05',
+                      1, 1)
+
+    session.add(product)
     session.commit()
+    session.flush()
+    print(product.id)
 
 
 

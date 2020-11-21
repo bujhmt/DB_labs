@@ -1,8 +1,7 @@
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, Numeric, Date, func, ForeignKey
+from sqlalchemy import Column, Integer, Numeric, Date, func
 from sqlalchemy.orm import relationship
 from models.links import links_orders_association
-Base = declarative_base()
+from  db import Base
 
 
 class Order(Base):
@@ -13,7 +12,11 @@ class Order(Base):
     transaction_date = Column(Date, default=func.now())
     clients = relationship("Client", secondary=links_orders_association)
 
-    def __init__(self, transaction_date: str, taxes_sum: int, client_id: int):
+    def __repr__(self):
+      return "<Order(taxes_sum='%i', transaction_date='%s')>" % \
+             (self.taxes_sum, self.transaction_date)
+
+    def __init__(self, transaction_date: str, taxes_sum: int):
         self.taxes_sum = taxes_sum
         self.transaction_date = transaction_date
 

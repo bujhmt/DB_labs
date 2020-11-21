@@ -1,7 +1,5 @@
 from sqlalchemy import Column, Integer, Table, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from  db import Base
 
 links_orders_association = Table(
     'Link_Client-Order', Base.metadata,

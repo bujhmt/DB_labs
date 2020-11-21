@@ -1,9 +1,7 @@
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Date, func
 from sqlalchemy.orm import relationship
 from models.links import links_orders_association
-Base = declarative_base()
-
+from db import Base
 
 class Client(Base):
     __tablename__ = 'Client'

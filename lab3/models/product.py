@@ -1,44 +1,46 @@
-from models.dbModel import DbModel
+from sqlalchemy import Column, Integer, String, Date, func, ForeignKey
+from sqlalchemy.orm import relationship, backref
+from db import Base
 
-class Product(DbModel):
-    def __init__(self):
-        self.id = {
-            'type': 'number',
-            'value': "DEFAULT",
-            'not null': False
-        }
-        self.name = {
-            'type': 'string',
-            'value': None
-        }
+class Product(Base):
+    __tablename__ = 'Product'
 
-        self.cost = {
-            'type': 'money',
-            'value': None
-        }
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    brand = Column(String, nullable=False)
+    manufacturer = Column(String)
+    manufacture_date = Column(Date, default=func.now())
+    category_id = Column(Integer, ForeignKey('Category.id'))
+    order_id = Column(Integer, ForeignKey('Order.id'))
+    Order = relationship("Order", backref=backref("Product", uselist=False))
+    Category = relationship("Category", backref=backref("Product", uselist=False))
 
-        self.brand = {
-            'type': 'string',
-            'value': None,
-            'not null': False
-        }
+    def __repr__(self):
+      return "<Category(name='%s'," \
+             " brand='%s'," \
+             " manufacturer='%s'," \
+             " manufacture_date='%s'," \
+             " category_id='%i'," \
+             " order_id='%i')>" % \
+             (self.name,
+              self.brand,
+              self.manufacturer,
+              self.manufacture_date,
+              self.category_id,
+              self.order_id)
 
-        self.manufacture_date = {
-            'type': 'date',
-            'value': None
-        }
+    def __init__(self,
+                 name: str,
+                 brand: str,
+                 manufacturer: str,
+                 manufacture_date: str,
+                 category_id: int,
+                 order_id: int):
+        self.name = name
+        self.brand = brand
+        self.manufacturer = manufacturer
+        self.manufacture_date = manufacture_date
+        self.category_id = category_id
+        self.order_id = order_id
 
-        self.manufacturer = {
-            'type': 'string',
-            'value': None
-        }
 
-        self.category_id = {
-            'type': 'number',
-            'value': None
-        }
-
-        self.order_id = {
-            'type': 'number',
-            'value': None
-        }

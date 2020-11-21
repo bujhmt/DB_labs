@@ -1,5 +1,5 @@
 from db import Base, session, engine
-from modelController import EntityController
+from modelController import ModelController
 
 from models.client import Client
 from models.order import Order
@@ -11,7 +11,7 @@ def recreate_database():
     Base.metadata.create_all(engine)
 
 if __name__ == '__main__':
-    controller = EntityController(Product)
+    controller = ModelController(Product)
     product = Product('update_test', 'brand', 'Igor Inc', '2002-04-02', 1, 1)
     product.id = 2
     result = controller.update(product)

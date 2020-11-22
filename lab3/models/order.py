@@ -10,7 +10,7 @@ class Order(Base):
     id = Column(Integer, primary_key=True)
     taxes_sum = Column(Numeric)
     transaction_date = Column(Date, default=func.now())
-    clients = relationship("Client", secondary=links_orders_association)
+    Clients = relationship("Client", secondary=links_orders_association)
 
     def __repr__(self):
       return "<Order(taxes_sum='%i', transaction_date='%s')>" % \

@@ -1,6 +1,8 @@
 from sqlalchemy import func, select
+from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 from db import session
+
 
 class ModelController(object):
 
@@ -54,14 +56,12 @@ class ModelController(object):
 
     def update(self, item):
         try:
-            mapped_values = {}
-            for entity in item.__dict__.items():
-                key = entity[0]
-                value = entity[1]
-                if key is not '_sa_instance_state':
-                    mapped_values[key] = value
+            if not isinstance(item, self.instance):
+                raise Exception('Invalid arguments')
 
-            session.query(self.instance).filter(self.instance.id == item.id).update(mapped_values)
+            session.query(self.instance) \
+                .filter(self.instance.id == item.id) \
+                .update(self.getModelEntityMappedKeys(item))
             session.commit()
             return True
         except Exception as err:
@@ -75,3 +75,20 @@ class ModelController(object):
             print("Get count error! ", err)
             raise err
 
+    def getModelKeys(self):
+        keys = []
+        for entity in self.instance.__dict__.items():
+            key = entity[0]
+            key_type = entity[1]
+            if type(key_type) is InstrumentedAttribute and key is not 'id' and not key[0].isupper():
+                keys.append(key)
+        return keys
+
+    def getModelEntityMappedKeys(self, item):
+        mapped_values = {}
+        for entity in item.__dict__.items():
+            key = entity[0]
+            value = entity[1]
+            if key is not '_sa_instance_state':
+                mapped_values[key] = value
+        return mapped_values

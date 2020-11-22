@@ -11,7 +11,7 @@ class Client(Base):
     birthday_date = Column(Date, default=func.now())
     email = Column(String)
 
-    orders = relationship("Order", secondary=links_orders_association)
+    Orders = relationship("Order", secondary=links_orders_association)
 
     def __repr__(self):
       return "<Client(name='%s', birthday_date='%s', email='%s')>" % \

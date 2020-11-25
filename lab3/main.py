@@ -13,10 +13,6 @@ if __name__ == '__main__':
     cui.addField('Categories', lambda: EntityView(Category).run())
     cui.addField('Product', lambda: EntityView(Product).run())
     cui.run()
-
-
-
-
     session.close()
 
 

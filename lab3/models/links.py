@@ -6,3 +6,6 @@ links_orders_association = Table(
     Column('client_id', Integer, ForeignKey('Client.id')),
     Column('order_id', Integer, ForeignKey('Order.id'))
 )
+
+
+

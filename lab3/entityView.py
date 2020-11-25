@@ -1,10 +1,8 @@
 import math
-
 from modelController import ModelController
-
 from CUI.cui import CUI
 
-exec_bad_chars = set('{}()[],;.+*\/')
+exec_bad_chars = set('{}()[],;.\'\"')
 
 
 class EntityView:
@@ -124,7 +122,6 @@ class EntityView:
         self.Controller.update(item)
         self.itemsCurrentMenu[1].stop()
         self.__getItem(item.id)
-
 
     def __deleteItem(self, id: int):
         self.Controller.delete(id)

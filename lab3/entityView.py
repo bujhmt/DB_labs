@@ -111,7 +111,10 @@ class EntityView:
                 itemsMenu.addField('PREV', lambda: self.__changePageParams(self.page - 1, self.per_page))
             entities = self.Controller.getRange(self.page, self.per_page)
             for entity in entities:
-                itemsMenu.addField(f"<{entity.id}> {entity.name}", lambda id=entity.id: self.__getItem(id))
+                if 'name' in self.Controller.getModelKeys():
+                    itemsMenu.addField(f"<{entity.id}> {entity.name}", lambda id=entity.id: self.__getItem(id))
+                else:
+                    itemsMenu.addField(f"<{entity.id}>", lambda id=entity.id: self.__getItem(id))
 
         except Exception as err:
             itemsMenu.setError(str(err))
